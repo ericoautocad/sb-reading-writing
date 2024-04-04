@@ -15,9 +15,10 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
+import com.pagonext.sbreadingwriting.domain.repository.secondary.TripChosenRepository;
 
 @Configuration
-@EnableMongoRepositories( mongoTemplateRef = "secondaryMongoTemplate")
+@EnableMongoRepositories(basePackageClasses = TripChosenRepository.class, mongoTemplateRef = "secondaryMongoTemplate")
 @EnableConfigurationProperties
 public class SecondaryConfig {
 
