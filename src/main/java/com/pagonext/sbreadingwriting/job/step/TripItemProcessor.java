@@ -24,7 +24,6 @@ public class TripItemProcessor implements ItemProcessor<Trips, TripChosen> {
 
 	@Override
 	public TripChosen process(Trips item) {
-		//LOGGER.info("Trips processor {}", item.toString());
 
 		var age = LocalDate.now().getYear() - item.getBirthYear();
 		var gender = UserGender.getType(item.getGender()).name();

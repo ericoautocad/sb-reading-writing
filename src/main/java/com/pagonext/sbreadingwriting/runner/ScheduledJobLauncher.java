@@ -57,6 +57,7 @@ public class ScheduledJobLauncher {
                 .addDate(JobParametersKey.CURRENT_TIME.getKey(),new Date())
                 .addString(JobParametersKey.PATH_DIRECTORY.getKey(), pathDirectory)
                 .addString(JobParametersKey.FILE_NAME.getKey(), fileName)
+                .addString(JobParametersKey.SOURCE_ENTITY.getKey(), "trips")
                 .toJobParameters();
 
         jobLauncher.run(job, params);

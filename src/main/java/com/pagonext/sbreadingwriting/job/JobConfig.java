@@ -12,6 +12,7 @@ import org.springframework.batch.core.job.builder.JobBuilder;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.core.repository.JobRepository;
 import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,6 +34,9 @@ public class JobConfig {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(JobConfig.class);
 
+    // @Autowired
+    // @Qualifier("mongoSecondaryTemplate")
+    // private MongoTemplate mongoSecondaryTemplate;
 
     @Bean
     public DataSource getDataSource() {
@@ -46,24 +50,26 @@ public class JobConfig {
 
     @Bean
     public Job tripJob(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                       MongoTemplate mongoTemplate, @Value("#jobExecutionContext['fileName']") String fileName) {
+                       @Qualifier("primaryMongoTemplate") MongoTemplate mongoTemplateSource,
+                       @Qualifier("secondaryMongoTemplate") MongoTemplate mongoTemplateTarget,
+                       @Value("#jobExecutionContext['fileName']") String fileName) {
         return new JobBuilder("tripJob", jobRepository)
                 .incrementer(new RunIdIncrementer())
-                .start(tripJobStep(jobRepository, transactionManager, mongoTemplate))
+                .start(tripJobStep(jobRepository, transactionManager, mongoTemplateSource, mongoTemplateTarget))
                 .listener(new TripJobCompletionListener())
                 .build();
     }
 
     @Bean
     public Step tripJobStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
-                            MongoTemplate mongoTemplate) {
+                            MongoTemplate mongoTemplateSource, MongoTemplate mongoTemplateTarget) {
         return new StepBuilder("tripJobCSVGenerator", jobRepository)
                 .startLimit(DEFAULT_LIMIT_SIZE)
                 .<Trips, TripChosen>chunk(DEFAULT_CHUNK_SIZE, transactionManager)
 
-                .reader(new TripItemReader(mongoTemplate))
+                .reader(new TripItemReader(mongoTemplateSource))
                 .processor(new TripItemProcessor())
-                .writer(new TripItemWriter(mongoTemplate))
+                .writer(new TripItemWriter(mongoTemplateTarget))
                 .listener(new TripStepListener())
                 .build();
     }
