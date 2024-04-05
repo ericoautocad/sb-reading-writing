@@ -1,6 +1,6 @@
 package com.pagonext.sbreadingwriting.config;
 
-import java.text.MessageFormat;
+import static java.util.Collections.*;
 
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.mongo.MongoProperties;
@@ -14,6 +14,9 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.SimpleMongoClientDatabaseFactory;
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
+import com.mongodb.MongoClientSettings;
+import com.mongodb.MongoCredential;
+import com.mongodb.ServerAddress;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.pagonext.sbreadingwriting.domain.repository.primary.TripRepository;
@@ -35,19 +38,19 @@ public class PrimaryConfig {
     public MongoClient mongoClient(@Qualifier("primaryProperties") MongoProperties mongoProperties) {
 
 
-        // MongoCredential credential = MongoCredential.createCredential(mongoProperties.getUsername(),
-        //         mongoProperties.getDatabase(), mongoProperties.getPassword().toString().toCharArray());
+        MongoCredential credential = MongoCredential.createCredential(mongoProperties.getUsername(),
+                mongoProperties.getAuthenticationDatabase(), mongoProperties.getPassword());
 
-        // return MongoClients.create(MongoClientSettings.builder()
-        //         .applyToClusterSettings(builder->builder
-        //                 .hosts(singletonList(new ServerAddress(mongoProperties.getHost(), mongoProperties.getPort()))))
-        //         .credential(credential)
-        //         .build());
+        return MongoClients.create(MongoClientSettings.builder()
+                .applyToClusterSettings(builder -> builder
+                        .hosts(singletonList(new ServerAddress(mongoProperties.getHost(), mongoProperties.getPort()))))
+                .credential(credential)
+                .build());
 
-        String connectionString = MessageFormat.format("mongodb://{0}:{1}@{2}:{3}/",
-        mongoProperties.getUsername(), new String( mongoProperties.getPassword()), mongoProperties.getHost(), mongoProperties.getPort().toString());
+        // String connectionString = MessageFormat.format("mongodb://{0}:{1}@{2}:{3}/",
+        // mongoProperties.getUsername(), new String( mongoProperties.getPassword()), mongoProperties.getHost(), mongoProperties.getPort().toString());
 
-        return MongoClients.create(connectionString);
+        // return MongoClients.create(connectionString);
 
     }
 

@@ -5,6 +5,11 @@ db-source-db.
 Crie na base criada a collection "db-source-db.trips" e importe nesta collection o conteúdo presente no arquivo "trips.json" que consta no diretório: 
 src/main/resources. 
 
+Como estamos utilizando as mesmas credencias para os bancos: **db-source-ms** e **db-target-ms**, apenas ajuste no arquivo **application.properties** as portas das das conexões do mongo, 
+conforme o exemplo abaixo: 
+    spring.data.mongodb.primary.port=27017
+    spring.data.mongodb.secondary.port=27017
+
 Agora é só rodar a aplicação para verificar os registros que são filtrados de "db-source-db.trips" e inseridos na colection "db-target-ms.trip_chosen". 
 
 # Rodando o start do projeto com docker
