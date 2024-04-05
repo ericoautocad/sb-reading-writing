@@ -1,0 +1,23 @@
+version: "3.4"
+
+services:
+  db-source:
+    container_name: db-source-ms
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: p1c4d1nh0
+    ports:
+      - 27018:27017
+
+  db-target:
+    container_name: db-target-ms
+    image: mongo
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: p1c4d1nh0
+    ports:
+      - 27019:27017
+
