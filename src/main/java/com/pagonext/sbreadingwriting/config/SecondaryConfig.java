@@ -40,7 +40,7 @@ public class SecondaryConfig {
         //         .credential(credential)
         //         .build());
 
-        var connectionString = MessageFormat.format("mongodb://{0}:{1}@{2}:{3}/",
+        String connectionString = MessageFormat.format("mongodb://{0}:{1}@{2}:{3}/",
         mongoProperties.getUsername(), new String( mongoProperties.getPassword()), mongoProperties.getHost(), mongoProperties.getPort().toString());
 
         return MongoClients.create(connectionString);

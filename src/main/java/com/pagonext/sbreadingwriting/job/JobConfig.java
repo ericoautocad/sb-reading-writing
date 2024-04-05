@@ -63,7 +63,7 @@ public class JobConfig {
     @Bean
     public Step tripJobStep(JobRepository jobRepository, PlatformTransactionManager transactionManager,
                             MongoTemplate mongoTemplateSource, MongoTemplate mongoTemplateTarget) {
-        return new StepBuilder("tripJobCSVGenerator", jobRepository)
+        return new StepBuilder("tripJobExtractData", jobRepository)
                 .startLimit(DEFAULT_LIMIT_SIZE)
                 .<Trips, TripChosen>chunk(DEFAULT_CHUNK_SIZE, transactionManager)
 
